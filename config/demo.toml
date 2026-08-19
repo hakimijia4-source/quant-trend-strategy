@@ -1,0 +1,94 @@
+[project]
+name = "synthetic_demo"
+timezone = "America/New_York"
+data_dir = "demo_data"
+reports_dir = "demo_reports"
+
+[market]
+provider = "synthetic"
+api_key_env = ""
+api_secret_env = ""
+massive_api_key_env = "MASSIVE_API_KEY"
+feed = "synthetic"
+adjustment = "all"
+target_symbol = "AAPL"
+context_symbols = ["SPY", "QQQ", "SOXX", "TLT", "GLD", "USO"]
+start = "2022-01-03"
+end = "2024-06-30"
+snapshot_minutes = 5
+regular_session_only = true
+
+[company]
+cik = "0000320193"
+name = "Apple Inc."
+aliases = ["Apple", "AAPL", "iPhone"]
+ir_feeds = []
+
+[events]
+sec_user_agent_env = "SEC_USER_AGENT"
+fred_api_key_env = "FRED_API_KEY"
+gdelt_enabled = false
+gdelt_max_records = 50
+event_decay_minutes = 2880
+fred_series = []
+
+[features]
+volume_lookback_days = 10
+rolling_bars = 12
+trend_window_bars = 12
+rvol_low = 0.8
+rvol_high = 1.5
+rotation_reference = "SOXX"
+market_reference = "SPY"
+
+[labels]
+horizon_minutes = 60
+min_abs_return_bps = 12.0
+min_trend_score = 55.0
+max_adverse_bps = 55.0
+
+[backtest]
+train_days = 90
+validation_days = 30
+test_days = 30
+step_days = 30
+probability_thresholds = [0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75]
+min_validation_decisions = 8
+min_gap_minutes = 60
+round_trip_cost_bps = 5.0
+random_seed = 42
+
+[model]
+architecture = "hierarchical_decision_transformer"
+sequence_length = 18
+hidden_dim = 48
+attention_heads = 4
+transformer_layers = 1
+dropout = 0.10
+batch_size = 128
+epochs = 4
+patience = 2
+learning_rate = 0.001
+weight_decay = 0.0001
+device = "auto"
+
+[rl]
+actions = ["flat", "long", "short"]
+options = ["observe", "trend_follow", "event_momentum", "squeeze_reversal", "macro_relief"]
+discount = 1.0
+target_return_quantile = 0.80
+behavior_policies = ["flat", "trend", "event", "contrarian", "exploratory"]
+behavior_epsilon = 0.15
+turnover_cost_bps = 2.5
+holding_cost_bps = 0.1
+drawdown_penalty = 0.10
+option_loss_weight = 0.6
+action_loss_weight = 1.0
+value_loss_weight = 0.25
+termination_loss_weight = 0.15
+world_model_loss_weight = 0.35
+world_model_kl_weight = 0.05
+world_model_free_nats = 1.0
+imagination_horizon = 8
+world_model_rerank_weight = 0.20
+label_smoothing = 0.02

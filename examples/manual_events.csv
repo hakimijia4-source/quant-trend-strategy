@@ -1,0 +1,3 @@
+event_id,event_time,first_seen_time,symbol,event_type,direction,evidence_score,surprise_score,is_retrospective,headline,source_url
+template_event,2026-08-05T18:00:00Z,2026-08-05T18:00:01Z,AAPL,macro_policy,0,80,0,false,Replace with an event known at this timestamp,https://example.com
+
