@@ -1,0 +1,94 @@
+[project]
+name = "aapl_single_stock_trend"
+timezone = "America/New_York"
+data_dir = "data"
+reports_dir = "reports"
+
+[market]
+provider = "alpaca"
+api_key_env = "ALPACA_API_KEY"
+api_secret_env = "ALPACA_API_SECRET"
+massive_api_key_env = "MASSIVE_API_KEY"
+feed = "sip"
+adjustment = "all"
+target_symbol = "AAPL"
+context_symbols = ["SPY", "QQQ", "SOXX", "IWM", "TLT", "IEF", "SHY", "GLD", "USO", "UUP"]
+start = "2016-01-01"
+end = "2026-08-01"
+snapshot_minutes = 5
+regular_session_only = true
+
+[company]
+cik = "0000320193"
+name = "Apple Inc."
+aliases = ["Apple", "AAPL", "iPhone"]
+ir_feeds = []
+
+[events]
+sec_user_agent_env = "SEC_USER_AGENT"
+fred_api_key_env = "FRED_API_KEY"
+gdelt_enabled = true
+gdelt_max_records = 250
+event_decay_minutes = 2880
+fred_series = ["DGS2", "DGS10", "VIXCLS", "DCOILWTICO"]
+
+[features]
+volume_lookback_days = 20
+rolling_bars = 12
+trend_window_bars = 12
+rvol_low = 0.8
+rvol_high = 1.5
+rotation_reference = "SOXX"
+market_reference = "SPY"
+
+[labels]
+horizon_minutes = 60
+min_abs_return_bps = 20.0
+min_trend_score = 62.0
+max_adverse_bps = 45.0
+
+[backtest]
+train_days = 756
+validation_days = 126
+test_days = 63
+step_days = 63
+probability_thresholds = [0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85]
+min_validation_decisions = 20
+min_gap_minutes = 60
+round_trip_cost_bps = 5.0
+random_seed = 42
+
+[model]
+architecture = "hierarchical_decision_transformer"
+sequence_length = 24
+hidden_dim = 96
+attention_heads = 4
+transformer_layers = 2
+dropout = 0.15
+batch_size = 256
+epochs = 40
+patience = 6
+learning_rate = 0.0005
+weight_decay = 0.0001
+device = "auto"
+
+[rl]
+actions = ["flat", "long", "short"]
+options = ["observe", "trend_follow", "event_momentum", "squeeze_reversal", "macro_relief"]
+discount = 1.0
+target_return_quantile = 0.85
+behavior_policies = ["flat", "trend", "event", "contrarian", "exploratory"]
+behavior_epsilon = 0.12
+turnover_cost_bps = 2.5
+holding_cost_bps = 0.1
+drawdown_penalty = 0.15
+option_loss_weight = 0.6
+action_loss_weight = 1.0
+value_loss_weight = 0.25
+termination_loss_weight = 0.15
+world_model_loss_weight = 0.35
+world_model_kl_weight = 0.05
+world_model_free_nats = 1.0
+imagination_horizon = 12
+world_model_rerank_weight = 0.20
+label_smoothing = 0.03
